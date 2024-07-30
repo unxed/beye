@@ -5348,8 +5348,7 @@ MBuffer ix86_Disassembler::parse_REX_type(MBuffer insn,char *up,ix86Param& DisP)
 void ix86_Disassembler::ix86_gettype(DisasmRet *dret,ix86Param& _DisP) const
 {
  MBuffer insn;
- char ua,ud,up,has_lock,has_rep,has_seg;
- bool has_vex;
+ char ua,ud,up,has_lock,has_rep,has_seg,has_vex;
  insn = &_DisP.RealCmd[0];
  dret->pro_clone = __INSNT_ORDINAL;
  has_vex = false;
@@ -5613,8 +5612,8 @@ DisasmRet ix86_Disassembler::disassembler(__filesize_t ulShift,
  DisasmRet Ret;
  ix86Param DisP;
  unsigned char ua,ud,up;
- char has_lock,has_rep,has_seg;
- bool has_vex,has_rex,has_xop;
+ char has_lock,has_rep,has_seg,has_vex,has_xop;
+ bool has_rex;
 
  memset(&DisP,0,sizeof(DisP));
  if(x86_Bitness == Bin_Format::Use64) DisP.pro_clone=K64_ATHLON;

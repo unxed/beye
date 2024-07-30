@@ -53,3 +53,4 @@ id = BEYE_HLP v6.1.0
 20041 = ../src/plugins/disasm/arm/armsize.htx
 20050 = ../src/plugins/disasm/ppc/ppc.htx
 20051 = ../src/plugins/disasm/ppc/ppcsize.htx
+;

@@ -385,7 +385,7 @@ app_cflags="-D__QNX6__ -D__DISABLE_MMF"
 app_libs="-lncurses"
 fi
 if linux ; then
-app_cflags=""
+app_cflags="-fPIE"
 fi
 enabled static && app_ldflags+="-static"
 enabled dynamic && app_ldflags+="-shared"

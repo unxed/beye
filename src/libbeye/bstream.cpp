@@ -23,7 +23,12 @@ bool binary_stream::open(const std::string& _fname,unsigned _openmode)
 {
     int h;
     if(!fname.empty()) return false; // prevent open without close
-    h = ::open(_fname.c_str(),_openmode);
+
+    if (_openmode & O_CREAT) {
+        h = ::open(_fname.c_str(), _openmode, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+    } else {
+        h = ::open(_fname.c_str(),_openmode);
+    }
     if(h==-1) return false;
     _handle = h ^ reinterpret_cast<long>(this);
     fname=_fname;

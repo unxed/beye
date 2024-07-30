@@ -528,15 +528,16 @@ std::vector<std::string> JVM_Parser::jvm_read_pool(binary_stream& handle,size_t 
 	oss.str("");
 	switch(utag) {
 	    case CONSTANT_STRING:
-	    case CONSTANT_CLASS:
+	    case CONSTANT_CLASS: {
 			fpos=handle.tell();
 			str=get_name(handle);
 			handle.seek(fpos+2,binary_stream::Seek_Set);
 			oss<<(utag==CONSTANT_CLASS?"Class":"String")<<": "<<str;
 			break;
+		}
 	    case CONSTANT_FIELDREF:
 	    case CONSTANT_METHODREF:
-	    case CONSTANT_INTERFACEMETHODREF:
+	    case CONSTANT_INTERFACEMETHODREF: {
 			flg=handle.read(type_word);
 			flg=JVM_WORD(&flg,1);
 			sval=handle.read(type_word);
@@ -545,15 +546,17 @@ std::vector<std::string> JVM_Parser::jvm_read_pool(binary_stream& handle,size_t 
 			    <<": class=#"<<std::hex<<std::setfill('0')<<std::setw(4)<<flg
 			    <<"H name_type_idx="<<std::hex<<std::setfill('0')<<std::setw(4)<<sval;
 			break;
+		}
 	    case CONSTANT_INTEGER:
-	    case CONSTANT_FLOAT:
+	    case CONSTANT_FLOAT: {
 			lval=handle.read(type_dword);
 			lval=JVM_DWORD(&lval,1);
 			oss<<(utag==CONSTANT_INTEGER?"Integer":"Float")
 			    <<std::hex<<std::setfill('0')<<std::setw(8)<<lval;
 			break;
+		}
 	    case CONSTANT_LONG:
-	    case CONSTANT_DOUBLE:
+	    case CONSTANT_DOUBLE: {
 			lval=handle.read(type_dword);
 			lval=JVM_DWORD(&lval,1);
 			lval2=handle.read(type_dword);
@@ -563,7 +566,8 @@ std::vector<std::string> JVM_Parser::jvm_read_pool(binary_stream& handle,size_t 
 			    <<" lo="<<std::hex<<std::setfill('0')<<std::setw(8)<<lval2;
 			i++;
 			break;
-	    case CONSTANT_NAME_AND_TYPE:
+		}
+	    case CONSTANT_NAME_AND_TYPE: {
 			fpos=handle.tell();
 			str=get_name(handle);
 			handle.seek(fpos+2,binary_stream::Seek_Set);
@@ -571,7 +575,8 @@ std::vector<std::string> JVM_Parser::jvm_read_pool(binary_stream& handle,size_t 
 			handle.seek(fpos+4,binary_stream::Seek_Set);
 			oss<<"Name&Type: "<<str<<" "<<str2;
 			break;
-	    case CONSTANT_UTF8:
+		}
+	    case CONSTANT_UTF8: {
 			sval=handle.read(type_word);
 			sval=JVM_WORD(&sval,1);
 			slen=std::min(sizeof(str)-1,size_t(sval));
@@ -582,10 +587,12 @@ std::vector<std::string> JVM_Parser::jvm_read_pool(binary_stream& handle,size_t 
 			stmp[slen]='\0';
 			oss<<"UTF8: "<<stmp;
 			break;
-	    default:
+		}
+	    default: {
 			oss<<"Unknown: "<<utag;
 			i=nnames;
 			break;
+		}
 	}
 	rc.push_back(oss.str());
     }
@@ -932,12 +939,13 @@ std::string JVM_Parser::bind(const DisMode& parent,__filesize_t ulShift,Bin_Form
 	utag=pool_cache->read(type_byte);
 	switch(utag) {
 	    case CONSTANT_STRING:
-	    case CONSTANT_CLASS:
+	    case CONSTANT_CLASS: {
 			str=get_name(*pool_cache);
 			break;
+		}
 	    case CONSTANT_FIELDREF:
 	    case CONSTANT_METHODREF:
-	    case CONSTANT_INTERFACEMETHODREF:
+	    case CONSTANT_INTERFACEMETHODREF: {
 			fpos=pool_cache->tell();
 			sval=pool_cache->read(type_word);
 			sval=JVM_WORD(&sval,1);
@@ -951,15 +959,17 @@ std::string JVM_Parser::bind(const DisMode& parent,__filesize_t ulShift,Bin_Form
 			utag=pool_cache->read(type_byte);
 			if(utag!=CONSTANT_NAME_AND_TYPE) break;
 			goto name_type;
+		}
 	    case CONSTANT_INTEGER:
-	    case CONSTANT_FLOAT:
+	    case CONSTANT_FLOAT: {
 			lval=pool_cache->read(type_dword);
 			lval=JVM_DWORD(&lval,1);
 			oss<<((utag==CONSTANT_INTEGER)?"Integer":"Float")<<":"<<std::hex<<std::setfill('0')<<std::setw(8)<<lval;
 			str=oss.str();
 			break;
+		}
 	    case CONSTANT_LONG:
-	    case CONSTANT_DOUBLE:
+	    case CONSTANT_DOUBLE: {
 			lval=pool_cache->read(type_dword);
 			lval=JVM_DWORD(&lval,1);
 			lval2=pool_cache->read(type_dword);
@@ -967,7 +977,8 @@ std::string JVM_Parser::bind(const DisMode& parent,__filesize_t ulShift,Bin_Form
 			oss<<((utag==CONSTANT_INTEGER)?"Long":"Double")<<":"<<std::hex<<std::setfill('0')<<std::setw(8)<<lval<<std::hex<<std::setfill('0')<<std::setw(8)<<lval2;
 			str=oss.str();
 			break;
-	    case CONSTANT_NAME_AND_TYPE:
+		}
+	    case CONSTANT_NAME_AND_TYPE: {
 	    name_type:
 			fpos=pool_cache->tell();
 			str=get_name(*pool_cache);
@@ -975,7 +986,8 @@ std::string JVM_Parser::bind(const DisMode& parent,__filesize_t ulShift,Bin_Form
 			str+=" ";
 			str+=get_name(*pool_cache);
 			break;
-	    case CONSTANT_UTF8:
+		}
+	    case CONSTANT_UTF8: {
 			sval=pool_cache->read(type_word);
 			sval=JVM_WORD(&sval,1);
 			char stmp[sval+1];
@@ -983,7 +995,10 @@ std::string JVM_Parser::bind(const DisMode& parent,__filesize_t ulShift,Bin_Form
 			bp=pool_cache->read(sval); memcpy(stmp,bp.data(),bp.size());
 			str=stmp;
 			break;
-	    default:	break;
+		}
+	    default: {
+			break;
+		}
 	}
     }
 bye:
