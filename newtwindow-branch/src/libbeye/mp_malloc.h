@@ -100,7 +100,7 @@ any_t* operator new[](size_t size);
 any_t* operator new[](size_t size,const zeromemory_t&);
 any_t* operator new[](size_t size,const alignedmemory_t&,size_t boundary);
 any_t* operator new[](size_t size,const std::nothrow_t&);
-void   operator delete(any_t* p);
-void   operator delete[](any_t* p);
+void   operator delete(any_t* p) noexcept;
+void   operator delete[](any_t* p) noexcept;
 
 #endif

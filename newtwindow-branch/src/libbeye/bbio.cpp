@@ -76,14 +76,7 @@ bool BBio_File::open(const std::string& _fname,unsigned _openmode)
 {
     openmode = _openmode;
 
-    int h;
-    if (openmode & O_CREAT) {
-        h = binary_stream::open(_fname.c_str(), openmode, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-    } else {
-        h = binary_stream::open(_fname, openmode);
-    }
-
-    if(!h) return false;
+    if(!binary_stream::open(_fname,openmode)) return false;
     vfb.fill(0L);
     is_eof=false;
     return true;

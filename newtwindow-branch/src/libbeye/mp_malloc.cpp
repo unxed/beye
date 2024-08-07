@@ -575,7 +575,7 @@ extern "C" void	SECURE_NAME3(_mp_free)(any_t* ptr) {
     mp_free(ptr);
 }
 
-any_t* operator new(size_t size) throw(std::bad_alloc) {
+any_t* operator new(size_t size) {
     any_t* rc;
     rc=SECURE_NAME0(_mp_malloc)(size);
     if(!rc) { std::bad_alloc ba; throw ba; }
@@ -595,7 +595,7 @@ any_t* operator new(size_t size,const alignedmemory_t&,size_t boundary) {
 }
 any_t* operator new(size_t size,const std::nothrow_t&) { return mp_malloc(size); }
 
-any_t* operator new[](size_t size) throw(std::bad_alloc) {
+any_t* operator new[](size_t size) {
     any_t* rc;
     rc=SECURE_NAME0(_mp_malloc)(size);
     if(!rc) { std::bad_alloc ba; throw ba; }
@@ -615,5 +615,5 @@ any_t* operator new[](size_t size,const alignedmemory_t&,size_t boundary) {
 }
 any_t* operator new[](size_t size,const std::nothrow_t&) { return mp_malloc(size); }
 
-void   operator delete(any_t* p) throw() { SECURE_NAME3(_mp_free)(p); }
-void   operator delete[](any_t* p) throw() { SECURE_NAME3(_mp_free)(p); }
+void   operator delete(any_t* p) noexcept { SECURE_NAME3(_mp_free)(p); }
+void   operator delete[](any_t* p) noexcept { SECURE_NAME3(_mp_free)(p); }

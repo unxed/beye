@@ -558,7 +558,7 @@ input_unix::input_unix(System& s,const std::string& user_cp)
 
 #ifdef	HAVE_MOUSE
     {
-	Gpm_Connect gc = { ~0, GPM_MOVE|GPM_HARD, 0, 0};
+	Gpm_Connect gc = { 0xFFFF, GPM_MOVE|GPM_HARD, 0, 0};
 	gpmhandle = Gpm_Open(&gc, 0);
 	if (gpmhandle < 0) gpmhandle = 0;
     }

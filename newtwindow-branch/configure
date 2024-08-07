@@ -383,7 +383,7 @@ app_cflags="-D__QNX6__ -D__DISABLE_MMF"
 app_libs="-lncurses"
 fi
 if linux ; then
-app_cflags=""
+app_cflags="-fPIE"
 fi
 add_cflags $app_cflags
 add_ldflags $app_ldflags

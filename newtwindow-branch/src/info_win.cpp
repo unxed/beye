@@ -572,7 +572,7 @@ __filesize_t WhereAMI::run(__filesize_t ctrl_pos)
 	default: btn = "";
     }
     os<<"File  offset : "<<std::hex<<std::setfill('0')<<std::setw(16)<<ctrl_pos<<"H"<<std::endl
-	<<"Virt. address: "<<vos<<std::endl
+	<<"Virt. address: "<<vos.str()<<std::endl
 	<<(prev.pa == ctrl_pos ? "Curr." : "Prev.")<<" entry  : "<<prev.name<<std::endl
 	<<"Next  entry  : "<<next.name<<std::endl
 	<<"Curr. object : #"<<obj.number<<" "<<(obj._class == Object_Info::Code ? "CODE" : obj._class == Object_Info::Data ? "DATA" : "no obj.")
@@ -600,7 +600,7 @@ __filesize_t WhereAMI::run(__filesize_t ctrl_pos)
 			strncpy(ofname,"WhereAMI",sizeof(ofname));
 			ofname[sizeof(ofname)-1] = '\0';
 			if(GetStringDlg(ofname," User comments : "," [ENTER] - Proceed "," Description : ")) out<<ofname<<std::endl<<std::endl;
-			out<<os;
+			out<<os.str();
 			out.close();
 		    }
 		    else bctx.errnoMessageBox(WRITE_FAIL,"",errno);
